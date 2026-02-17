@@ -1,28 +1,33 @@
-#!/usr/bin/env python
-
-import time
+import streamlit as st
 import random
+import time
 
-print()
+st.title("Math Quiz 🧮")
 
-start = time.time()
+# Initialize session state to keep track of questions and score
+if 'zahl1' not in st.session_state:
+    st.session_state.zahl1 = random.randint(1, 10)
+    st.session_state.zahl2 = random.randint(1, 10)
+    st.session_state.start_time = time.time()
 
-for i in range(5):
+z1 = st.session_state.zahl1
+z2 = st.session_state.zahl2
 
-    zahl1=random.randint(1,10)
-    zahl2=random.randint(1,10)
-    ergebniss= zahl1 * zahl2
+st.write(f"What is {z1} * {z2}?")
 
-    while True:
+# Use Streamlit's input widget
+tipp = st.number_input("Your answer:", step=1, value=0)
 
-        tipp = int(input(f"Задача {i+1} :        {zahl1} * {zahl2} = "))
+if st.button("Check Answer"):
+    ergebniss = z1 * z2
+    if tipp == ergebniss:
+        st.success("Правилно! 🎉")
+        # Generate new numbers for next time
+        st.session_state.zahl1 = random.randint(1, 10)
+        st.session_state.zahl2 = random.randint(1, 10)
+        st.button("Next Question")
+    else:
+        st.error("Грешка! Опитай пак! ❌")
 
-        if tipp==ergebniss:
-
-            print("Правилно!")
-            break
-        else: print("Грешка! Опитай пак!")
-
-end=int(time.time()-start)
-
-print(f"Решихте задачите за {end} секунди!")
+end = int(time.time() - st.session_state.start_time)
+st.info(f"Time passed: {end} seconds")
